@@ -1,25 +1,36 @@
+import java.util.EmptyStackException;
+
 public class Stack<T>
 {
-	private Node<T> head;
-	private Node<T> z;
+	private Node head;
+	private Node z;
+
+	private class Node
+	{
+		public Node next;
+		public T value;
+	}
 
 	public Stack()
 	{
-		head = new Node<T>();
-		z = new Node<T>();
+		head = new Node();
+		z = new Node();
 		head.next = z;
 		z.next = z;
 	}
-	public void add(T value)
+	public void push(T value)
 	{
-		Node<T> node = new Node<T>();
+		Node node = new Node();
 		node.value = value;
 		node.next = head.next;
 		head.next = node;
 	}
 	public T pop()
 	{
-		Node<T> node = head.next;
+		if(head.next == z)
+			throw new EmptyStackException();
+
+		Node node = head.next;
 		head.next = node.next;
 		return node.value;
 	}
@@ -29,20 +40,22 @@ public class Stack<T>
 			pop();
 	}
 
-	public boolean isEmpty()
+	public boolean empty()
 	{
 		return head.next == z;
 	}
 
-	public static void main(String args[])
-	{
-		Stack<Integer> test = new Stack<Integer>();
-		for(int i = 0; i < 10; i++)
-		{
-			System.out.println("Adding: "+ i);
-			test.add(i);
-		}
-		while(!test.isEmpty())
-			System.out.println("Popping: "+ test.pop());
-	}
+	// public static void main(String args[])
+	// {
+	// 	Stack<Integer> test = new Stack<Integer>();
+	// 	for(int i = 0; i < 10; i++)
+	// 	{
+	// 		System.out.println("Adding: "+ i);
+	// 		test.add(i);
+	// 	}
+	// 	try{
+	// 		while(true)
+	// 			System.out.println("Popping: "+ test.pop());
+	// 	}catch(EmptyStackException e) { }
+	// }
 }
