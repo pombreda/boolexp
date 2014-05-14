@@ -71,46 +71,24 @@ public class Teste
 	{
 		Scanner input = new Scanner(System.in);
 		System.out.print("Enter expression: ");
-		String infix = input.nextLine();
-		System.out.println(infix);
+		
+		Scanner infix = new Scanner(input.nextLine());
+		
 		Stack<String> stack = new Stack<String>();
 		Vector<String> postfix = new Vector<String>();
 		
-		while(!infix.equals(""))
+		while(infix.hasNext())
 		{
-			if(infix.startsWith(TOKEN_AND))
-			{
-				infix = infix.replaceFirst(TOKEN_AND, "");
-				// postfix.add(stack.pop());
-				// postfix.add(stack.pop());
-				stack.push(TOKEN_AND);
-			}
-			else if(infix.startsWith(TOKEN_IMPLIES))
-			{
-				infix = infix.replaceFirst(TOKEN_IMPLIES, "");
-				// postfix.add(stack.pop());
-				// postfix.add(stack.pop());
-				stack.push(TOKEN_IMPLIES);
-			}
-			else if(infix.startsWith(TOKEN_NOT))
-			{
-				infix = infix.replaceFirst(TOKEN_AND, "");
-				postfix.add(stack.pop());
-				stack.push(TOKEN_NOT);
-			}
-			else if(infix.contains("\\s"))
-			{	
-				String splited[] = infix.split("\\s", 2);
-				infix = splited[1];
-				stack.push(splited[0]);
-			}
-			else
-			{
-				
-			}
-			System.out.println(infix);
-			infix = infix.trim();
+			if(infix.hasNext(TOKEN_NOT))
+				System.out.println(infix.next(TOKEN_NOT));
+			else if(infix.hasNext(TOKEN_AND))
+				System.out.println(infix.next(TOKEN_AND));
+			else if(infix.hasNext(TOKEN_IMPLIES))
+				System.out.println(infix.next(TOKEN_IMPLIES));
+			else System.out.println(infix.next());
 		}
+
+		
 		String result = "";
 		for(int i = 0; i < postfix.size(); i++)
 			result += postfix.get(i);
