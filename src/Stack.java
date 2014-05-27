@@ -44,6 +44,13 @@ public class Stack<T>
 	{
 		return head.next == z;
 	}
+	
+	public T top()
+	{
+		if(head.next == z)
+			throw new EmptyStackException();
+		return head.next.value;
+	}
 
 	// public static void main(String args[])
 	// {
