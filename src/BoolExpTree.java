@@ -1,88 +1,80 @@
-import java.util.LinkedHashSet;
+import java.util.Vector;
 import java.util.Hashtable;
 import java.util.Vector;
-
+import java.util.Stack;
+import java.util.LinkedHashSet;
+import java.util.Vector;
+import java.util.Scanner;
+import java.util.Map;
+import java.util.HashMap;
 public class BoolExpTree
 {
-	public static final String NOT = "!";
-	public static final String AND = "&";
-	public static final String OR = "|";
-	public static final String IMPLIES = "->";
-	public static final String patternString = "\\!|\\&|\\-\\>|[\\(\\)]|\\p{Alpha}+";
-	
-	private static int precedence(String token)
+	private ExpNode root;
+	private LinkedHashSet<String> table;
+
+	public BoolExpTree(Vector<String> postfix)
 	{
-		if(token.equals(NOT))
-			return 5;
-		if(token.equals(AND))
-			return 4;
-		if(token.equals(OR))
-			return 3;
-		if(token.equals(IMPLIES))
-			return 2;
-		return 0;	
-	}
-	
-
-	// se operando - coloca na lista
-	// se operador
-	//    pop na pilha até achar operador de menor precedencia ou pilha vazia
-	//    push operador
-	// se nao houver mais entradas colocar o conteúdo da pilha na lista
-	public static LinkedList<String> process(String input)
-	{
-		Stack<String> operators = new Stack<String>();
-		LinkedList<String> postfix = new LinkedList<String>();
-
-		Pattern pattern = Pattern.compile(patternString);
-		Matcher matcher = pattern.matcher(input);
-		while(matcher.find())
+		table = new LinkedHashSet<String>();
+		Stack<ExpNode> stack = new Stack<ExpNode>();
+		for(String token : postfix)
 		{
-			int start = matcher.start();
-			int end = matcher.end();
-			String token = input.substring(start, end);
-			processToken(token, operators, postfix);
-		}
-		while(!operators.empty())
-			// System.out.print(operators.pop() + " ");
-			postfix.add(operators.pop());
-		// System.out.println();
-		return postfix;
-	}
-
-	private static void processToken(String token, Stack<String> operators, LinkedList<String> postfix)
-	{			
-		if(token.matches("\\p{Alpha}+"))
-		{
-				// System.out.print(token + " ");
-				postfix.add(token);
-		}
-		else if(token.equals(")"))
-		{
-			while(!operators.empty())
+			if(token.equals(BooleanOperators.NOT))
 			{
-				String top = operators.pop();
-				if(top.equals("("))
-					break;
-				// System.out.print(top + " ");
-				postfix.add(top);
+				ExpNode node = CompoundNode.make(token, stack.pop(), null);
+				stack.push(node);
+			}
+			else if(token.equals(BooleanOperators.AND) || 
+				    token.equals(BooleanOperators.OR) ||
+			    	token.equals(BooleanOperators.IMPLIES))
+			{
+				ExpNode right = stack.pop();
+				ExpNode left = stack.pop();
+				ExpNode node = CompoundNode.make(token,left, right);
+				stack.push(node);
+			}
+			else
+			{
+				String boolToken = token.toLowerCase();
+				if (boolToken.equals("true") || boolToken.equals("false"))
+					stack.push(new ConstantNode(token));
+				else
+				{
+					stack.push(new IdentifierNode(token));
+					table.add(token);
+				}
 			}
 		}
-		else if(token.equals("("))
-		{
-			operators.push(token);
-		}
-		else
-		{
-			while (!operators.empty() && !operators.peek().equals('('))
-			{
-				String top = operators.peek();
-				if (precedence(top) < precedence(token))
-					break;
-				// System.out.print(operators.pop() + " ");
-				postfix.add(operators.pop());
-			}
-			operators.push(token);
-		}
+		root = stack.pop();
+	}
+
+	public boolean eval(Map<String, Boolean> state)
+	{
+		return root.eval(state);
+	}
+
+	public String toString()
+	{
+		return root.toString();
+	}
+
+	public LinkedHashSet<String> getTable()
+	{
+		return new LinkedHashSet<String>(table);
+	}
+
+	public static void main(String args[])
+	{
+		//Scanner in = new Scanner(System.in);
+		System.out.println("Enter boolean expression: ");
+		//String input = in.nextLine();
+		String input = "(a  & b) & ! c";
+		BoolExpTree tree = new BoolExpTree(Util.InfixToPostfix(input));
+		System.out.println(tree);
+		HashMap<String, Boolean> state = new HashMap<String, Boolean> ();
+		state.put("a", true);
+		state.put("b", true);
+		state.put("c", true);
+		System.out.println(state);
+		System.out.println("Result: " + tree.eval(state));
 	}
 }

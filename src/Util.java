@@ -1,32 +1,39 @@
-import java.util.LinkedList;
+import java.util.Vector;
 import java.util.Stack;
 import java.util.Scanner;
+import java.util.LinkedHashSet;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Util
 {
-	public static Vector<Boolean> decode(int code_bool, int size)
+	public static HashMap<String, Boolean> decode(int code_bool, LinkedHashSet<String> table)
 	{
-		Vector<Boolean> vect_b = new Vector<Boolean>(size);
+		int size = table.size();
+		HashMap<String, Boolean> state = new HashMap<String, Boolean> (size);
+		Iterator<String> table_iterator = table.iterator();
 		for(int i = size - 1; i >= 0; --i)
 		{
+			String id = table_iterator.next();
 			boolean val = ((code_bool >> i) & 0x1) == 1;
 			//vect_b.add(val);
-			vect_b.add(val);
+			//vect_b.add(val);
+			state.put(id, val);
 		}
-		return vect_b;
+		return state;
 	}
 		private static int precedence(String token)
 	{
-		if(token.equals(BoolExpTree.NOT))
-			return 5;
-		if(token.equals(BoolExpTree.AND))
+		if(token.equals(BooleanOperators.NOT))
 			return 4;
-		if(token.equals(BoolExpTree.OR))
+		if(token.equals(BooleanOperators.AND))
 			return 3;
-		if(token.equals(BoolExpTree.IMPLIES))
+		if(token.equals(BooleanOperators.OR))
 			return 2;
+		if(token.equals(BooleanOperators.IMPLIES))
+			return 1;
 		return 0;	
 	}
 	
@@ -36,13 +43,13 @@ public class Util
 	//    pop na pilha até achar operador de menor precedencia ou pilha vazia
 	//    push operador
 	// se nao houver mais entradas colocar o conteúdo da pilha na lista
-	public static LinkedList<String> InfixToPostfix(String infix)
+	public static Vector<String> InfixToPostfix(String infix)
 	{
 		Stack<String> operators = new Stack<String>();
-		LinkedList<String> postfix = new LinkedList<String>();
+		Vector<String> postfix = new Vector<String>();
 
-		Pattern pattern = Pattern.compile(patternString);
-		Matcher matcher = pattern.matcher(infix);
+		//Pattern pattern = Pattern.compile(BooleanOperators.patternString);
+		Matcher matcher = BooleanOperators.pattern.matcher(infix);
 		while(matcher.find())
 		{
 			int start = matcher.start();
@@ -57,7 +64,7 @@ public class Util
 		return postfix;
 	}
 
-	private static void processToken(String token, Stack<String> operators, LinkedList<String> postfix)
+	private static void processToken(String token, Stack<String> operators, Vector<String> postfix)
 	{			
 		if(token.matches("\\p{Alpha}+"))
 		{
@@ -95,9 +102,14 @@ public class Util
 
 	public static void main(String args[])
 	{
-		int valor = 0b11110;
-		Vector<Boolean> teste = decode(valor, 5);
+		// int valor = 0b11110;
+		// Vector<Boolean> teste = decode(valor, 5);
 		
-		System.out.println(teste);
+		// System.out.println(teste);
+
+		Scanner in = new Scanner(System.in);
+		System.out.println("Enter boolean expression: ");
+		String input = in.nextLine();
+		System.out.println(InfixToPostfix(input));
 	}
 }

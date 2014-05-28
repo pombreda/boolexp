@@ -9,9 +9,14 @@ public class IdentifierNode implements ExpNode
 		this.name = name;
 	}
 
-	public boolean eval(Map<String, Boolean> table)
+	public boolean eval(Map<String, Boolean> state)
 	{
-		return table.get(name);
+		return state.get(name);
+	}
+
+	public String toString()
+	{
+		return this.name;
 	}
 
 }
