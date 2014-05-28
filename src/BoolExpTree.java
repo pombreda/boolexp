@@ -1,11 +1,9 @@
-import java.util.LinkedList;
-import java.util.Stack;
-import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.LinkedHashSet;
+import java.util.Hashtable;
+import java.util.Vector;
 
-public class InfixToPostfix {
-	
+public class BoolExpTree
+{
 	public static final String NOT = "!";
 	public static final String AND = "&";
 	public static final String OR = "|";
@@ -86,13 +84,5 @@ public class InfixToPostfix {
 			}
 			operators.push(token);
 		}
-	}
-
-	public static void main(String args[])
-	{		
-		Scanner in = new Scanner(System.in);
-		System.out.println("Enter boolean expression: ");
-		String input = in.nextLine();
-		System.out.println(process(input));
 	}
 }
