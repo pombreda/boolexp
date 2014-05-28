@@ -1,57 +1,78 @@
 import java.util.EmptyStackException;
+import java.util.NoSuchElementException;
+import java.util.Iterator;
 
-public class Stack<T>
+public class Stack<T> implements Iterable<T>
 {
-	private Node head;
-	private Node z;
-
-	private class Node
-	{
-		public Node next;
-		public T value;
-	}
+	private Node<T> head;
+	private int N;
 
 	public Stack()
 	{
-		head = new Node();
-		z = new Node();
-		head.next = z;
-		z.next = z;
+		head = null;
+		N = 0;
 	}
 	public void push(T value)
 	{
-		Node node = new Node();
-		node.value = value;
-		node.next = head.next;
-		head.next = node;
+		Node<T> node = new Node<T>(value);
+		node.next = head;
+		head = node;
+		++N;
 	}
 	public T pop()
 	{
-		if(head.next == z)
+		if(empty())
 			throw new EmptyStackException();
-
-		Node node = head.next;
-		head.next = node.next;
-		return node.value;
+		--N;
+		T value = head.value;
+		head = head.next;
+		return value;
 	}
 	public void clean()
 	{
-		while(head.next != z)
-			pop();
+		head = null;
+		N = 0;
 	}
 
 	public boolean empty()
 	{
-		return head.next == z;
+		return head == null;
+	}
+
+	public int size()
+	{
+		return N;
 	}
 	
 	public T top()
 	{
-		if(head.next == z)
+		if(head == null)
 			throw new EmptyStackException();
-		return head.next.value;
+		return head.value;
 	}
 
+    public Iterator<T> iterator()  {
+        return new ListIterator<T>(head);
+    }
+
+    private class ListIterator<T> implements Iterator<T> {
+        private Node<T> current;
+
+        public ListIterator(Node<T> head) {
+            current = head;
+        }
+
+        public boolean hasNext()  { return current != null;                     }
+        public void remove()      { throw new UnsupportedOperationException();  }
+
+        public T next()
+        {
+            if (!hasNext()) throw new NoSuchElementException();
+            T value = current.value;
+            current = current.next; 
+            return value;
+        }
+    }
 	// public static void main(String args[])
 	// {
 	// 	Stack<Integer> test = new Stack<Integer>();

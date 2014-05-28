@@ -3,7 +3,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class InfixToPostfix {
-	private String postfix;
+	private Queue<String> postfix;
 	private Stack<String> operators;
 	
 	private final String NOT = "!";
@@ -15,6 +15,7 @@ public class InfixToPostfix {
 	public InfixToPostfix() 
 	{
 		operators = new Stack<String>();
+		postfix = new Queue<String>();
 	}
 
 	private int precedence(String token)
@@ -36,7 +37,7 @@ public class InfixToPostfix {
 	//    pop ateh achar menor precedencia ou vazio
 	//    push operator
 	// se nao houver mais entrada, pop ate o fim
-	private void process(String input)
+	private Queue<String> process(String input)
 	{
 		Pattern pattern = Pattern.compile(patternString);
 		Matcher matcher = pattern.matcher(input);
@@ -48,15 +49,18 @@ public class InfixToPostfix {
 			processToken(token);
 		}
 		while(!operators.empty())
-			System.out.print(operators.pop() + " ");
-		System.out.println();
+			// System.out.print(operators.pop() + " ");
+			postfix.enqueue(operators.pop());
+		// System.out.println();
+		return postfix;
 	}
 
 	private void processToken(String token)
 	{			
 		if(token.matches("\\p{Alpha}+"))
 		{
-				System.out.print(token + " ");
+				// System.out.print(token + " ");
+				postfix.enqueue(token);
 		}
 		else if(token.equals(")"))
 		{
@@ -65,7 +69,8 @@ public class InfixToPostfix {
 				String top = operators.pop();
 				if(top.equals("("))
 					break;
-				System.out.print(top + " ");
+				// System.out.print(top + " ");
+				postfix.enqueue(top);
 			}
 		}
 		else if(token.equals("("))
@@ -79,7 +84,8 @@ public class InfixToPostfix {
 				String top = operators.top();
 				if (precedence(top) < precedence(token))
 					break;
-				System.out.print(operators.pop() + " ");
+				// System.out.print(operators.pop() + " ");
+				postfix.enqueue(operators.pop());
 			}
 			operators.push(token);
 		}
@@ -92,6 +98,6 @@ public class InfixToPostfix {
 		String input = in.nextLine();
 
 		InfixToPostfix o = new InfixToPostfix();
-		o.process(input);
+		System.out.println(o.process(input));
 	}
 }
