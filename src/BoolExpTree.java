@@ -1,12 +1,5 @@
-import java.util.Vector;
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.Stack;
-import java.util.LinkedHashSet;
-import java.util.Vector;
-import java.util.Scanner;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
+
 public class BoolExpTree
 {
 	private ExpNode root;
@@ -60,21 +53,5 @@ public class BoolExpTree
 	public LinkedHashSet<String> getTable()
 	{
 		return new LinkedHashSet<String>(table);
-	}
-
-	public static void main(String args[])
-	{
-		//Scanner in = new Scanner(System.in);
-		System.out.println("Enter boolean expression: ");
-		//String input = in.nextLine();
-		String input = "(a  & b) & ! c";
-		BoolExpTree tree = new BoolExpTree(Util.InfixToPostfix(input));
-		System.out.println(tree);
-		HashMap<String, Boolean> state = new HashMap<String, Boolean> ();
-		state.put("a", true);
-		state.put("b", true);
-		state.put("c", true);
-		System.out.println(state);
-		System.out.println("Result: " + tree.eval(state));
 	}
 }

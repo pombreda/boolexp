@@ -18,8 +18,4 @@ public class BooleanOperators
 			"\\p{Alpha}+";
 		pattern = Pattern.compile(patternString);
 	}
-	public static void main(String args[])
-	{
-		System.out.println(Pattern.quote(OR));
-	}
 }

@@ -2,17 +2,17 @@ import java.util.Vector;
 import java.util.Stack;
 import java.util.Scanner;
 import java.util.LinkedHashSet;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Util
 {
-	public static HashMap<String, Boolean> decode(int code_bool, LinkedHashSet<String> table)
+	public static LinkedHashMap<String, Boolean> decode(int code_bool, LinkedHashSet<String> table)
 	{
 		int size = table.size();
-		HashMap<String, Boolean> state = new HashMap<String, Boolean> (size);
+		LinkedHashMap<String, Boolean> state = new LinkedHashMap<String, Boolean> (size);
 		Iterator<String> table_iterator = table.iterator();
 		for(int i = size - 1; i >= 0; --i)
 		{
@@ -68,7 +68,6 @@ public class Util
 	{			
 		if(token.matches("\\p{Alpha}+"))
 		{
-				// System.out.print(token + " ");
 				postfix.add(token);
 		}
 		else if(token.equals(")"))
@@ -78,7 +77,6 @@ public class Util
 				String top = operators.pop();
 				if(top.equals("("))
 					break;
-				// System.out.print(top + " ");
 				postfix.add(top);
 			}
 		}
@@ -93,23 +91,9 @@ public class Util
 				String top = operators.peek();
 				if (precedence(top) < precedence(token))
 					break;
-				// System.out.print(operators.pop() + " ");
 				postfix.add(operators.pop());
 			}
 			operators.push(token);
 		}
-	}
-
-	public static void main(String args[])
-	{
-		// int valor = 0b11110;
-		// Vector<Boolean> teste = decode(valor, 5);
-		
-		// System.out.println(teste);
-
-		Scanner in = new Scanner(System.in);
-		System.out.println("Enter boolean expression: ");
-		String input = in.nextLine();
-		System.out.println(InfixToPostfix(input));
 	}
 }

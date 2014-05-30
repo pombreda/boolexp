@@ -87,12 +87,4 @@ public class InfixToPostfix {
 			operators.push(token);
 		}
 	}
-
-	public static void main(String args[])
-	{		
-		Scanner in = new Scanner(System.in);
-		System.out.println("Enter boolean expression: ");
-		String input = in.nextLine();
-		System.out.println(process(input));
-	}
 }

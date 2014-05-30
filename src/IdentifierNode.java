@@ -18,5 +18,4 @@ public class IdentifierNode implements ExpNode
 	{
 		return this.name;
 	}
-
 }
