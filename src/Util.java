@@ -9,6 +9,14 @@ import java.util.regex.Pattern;
 
 public class Util
 {
+	/** 
+	Takes a int representing the boolean state and the symbol table of the boolean function
+	
+	@param code_bool Each bit represents a boolean operand
+	@param table The symbols of the boolean function
+
+	@return A state to the boolean function (symbol, boolean)
+	*/
 	public static LinkedHashMap<String, Boolean> decode(int code_bool, LinkedHashSet<String> table)
 	{
 		int size = table.size();
@@ -17,14 +25,19 @@ public class Util
 		for(int i = size - 1; i >= 0; --i)
 		{
 			String id = table_iterator.next();
-			boolean val = ((code_bool >> i) & 0x1) == 1;
-			//vect_b.add(val);
-			//vect_b.add(val);
-			state.put(id, val);
+			// Shift each bit and applie logical AND to generate respective symbol boolean
+			boolean value = ((code_bool >> i) & 0x1) == 1;
+			state.put(id, value);
 		}
 		return state;
 	}
-		private static int precedence(String token)
+
+	/**
+	The precedence of the operator
+
+	@return A integer. The bigger the precedence the bigger the value
+	*/
+	private static int precedence(String token)
 	{
 		if(token.equals(BooleanOperators.NOT))
 			return 4;
@@ -37,18 +50,19 @@ public class Util
 		return 0;	
 	}
 	
+	/**
+	Converts a boolean expression from infix to postfix
 
-	// se operando - coloca na lista
-	// se operador
-	//    pop na pilha até achar operador de menor precedencia ou pilha vazia
-	//    push operador
-	// se nao houver mais entradas colocar o conteúdo da pilha na lista
+	@param infix A non parsed string with the infix expression
+
+	@return A vector of strings, ordered by postfix notation.
+	*/
 	public static Vector<String> InfixToPostfix(String infix)
 	{
 		Stack<String> operators = new Stack<String>();
 		Vector<String> postfix = new Vector<String>();
 
-		//Pattern pattern = Pattern.compile(BooleanOperators.patternString);
+		// Parse the string. While there's a token, process the token
 		Matcher matcher = BooleanOperators.pattern.matcher(infix);
 		while(matcher.find())
 		{
@@ -57,20 +71,31 @@ public class Util
 			String token = infix.substring(start, end);
 			processToken(token, operators, postfix);
 		}
-		while(!operators.empty())
-			// System.out.print(operators.pop() + " ");
-			postfix.add(operators.pop());
-		// System.out.println();
+
+		// If there are no more tokens pop all the stack to the output
+		while(!operators.empty()) postfix.add(operators.pop());
+
 		return postfix;
 	}
 
+	/**
+	This function helds the main portion of the algorithm InfixToPostfix.
+	Process each token.
+		If operand, put the token in the output vector.
+ 		If operator, pop until find a operator of lower precedence, then push the token.
+ 		If ")" pop until find a matching "("
+
+	@token A token
+	@operators The operators stack
+	@postfix The vector of tokens
+	*/
 	private static void processToken(String token, Stack<String> operators, Vector<String> postfix)
-	{			
-		if(token.matches("\\p{Alpha}+"))
+	{		
+		if(token.matches("\\p{Alpha}+")) // If is an ID puts it on the vector
 		{
 				postfix.add(token);
-		}
-		else if(token.equals(")"))
+		}		
+		else if(token.equals(")")) // If ")" pop until find matching "("
 		{
 			while(!operators.empty())
 			{
@@ -84,9 +109,9 @@ public class Util
 		{
 			operators.push(token);
 		}
-		else
+		else// if is an operator token pop until find operator of lower precedence, then push
 		{
-			while (!operators.empty() && !operators.peek().equals('('))
+			while (!operators.empty() && !operators.peek().equals('(')) 
 			{
 				String top = operators.peek();
 				if (precedence(top) < precedence(token))
