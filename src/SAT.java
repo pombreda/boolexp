@@ -12,7 +12,7 @@ public class SAT
 
 	@param tree A Boolean Expression Tree
 	*/
-	public static void testeStates(BoolExpTree tree)
+	public static void evalStates(BoolExpTree tree)
 	{
 		LinkedHashSet<String> table = tree.getTable();
 		boolean tautology = true;
@@ -94,6 +94,6 @@ public class SAT
 		String input = in.nextLine();
 		BoolExpTree tree = new BoolExpTree(Util.InfixToPostfix(input));
 		System.out.println("\nTabela verdade:");
-		testeStates(tree);
+		evalStates(tree);
 	}
 }
