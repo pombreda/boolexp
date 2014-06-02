@@ -1,4 +1,10 @@
 import java.util.regex.Pattern;
+
+/**
+A hardcoded class for boolean expression parsing.
+Contains the constants used for operator and the pattern for parsing.
+TODO: use enumerators
+*/
 public class BooleanOperators
 {
 	public static final String NOT = "!";

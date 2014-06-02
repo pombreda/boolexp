@@ -1,7 +1,21 @@
 import java.util.Map;
 
+/**
+Compound Nodes represents operands and always contain children nodes.
+
+TODO: Use arbitrary number of children
+*/
 public abstract class CompoundNode implements ExpNode
 {
+	/**
+	Factory method for creating Nodes for each operator token
+
+	@param operator Token from the expression
+	@param left Left child node
+	@param right Right child node
+
+	@return A subclass of ExpNode
+	*/
 	public static ExpNode make(String operator, ExpNode left, ExpNode right)
 	{
 		if(operator.equals(BooleanOperators.NOT))

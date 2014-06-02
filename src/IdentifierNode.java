@@ -1,5 +1,8 @@
 import java.util.Map;
 
+/**
+A Node for variables of the boolean expression
+*/
 public class IdentifierNode implements ExpNode
 {
 	public final String name;

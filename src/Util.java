@@ -7,6 +7,9 @@ import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+Utility functions to manipulate infix boolean expressions
+*/
 public class Util
 {
 	/** 
