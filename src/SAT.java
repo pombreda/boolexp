@@ -15,8 +15,8 @@ public class SAT
 	public static void evalStates(BoolExpTree tree)
 	{
 		LinkedHashSet<String> table = tree.getTable();
-		boolean tautology = true;
-		boolean sat = false;
+		boolean sat = false; // satisfiability
+		boolean fal = false; // falseability
 
 		printTable(table);
 		System.out.println();
@@ -28,19 +28,23 @@ public class SAT
 			printValues(state, eval);
 
 			sat = sat || eval;
-			tautology = tautology && eval;
+			fal = fal || ! eval;
+			
+			if(sat && fal)
+			{
+				break;
+			}
 		}
 		System.out.println();
-		if(tautology)
-		{
-			System.out.println("Tautologia");
-		}else if(sat)
+		if(sat)
 		{
 			System.out.println("Satisfeita");
+			if(!fal) System.out.println("Tautologia");
 		}
-		else
+		if(fal)
 		{
-			System.out.println("Contradição");
+			System.out.println("Falsificável");
+			if (!sat) System.out.println("Contradição");
 		}
 	}
 
